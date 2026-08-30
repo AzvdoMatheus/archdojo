@@ -65,6 +65,29 @@ This file is the project's committed home for project-intrinsic agent knowledge:
   drag code calls `setPointerCapture` with a `pointerId` the browser never associated with
   a real pointer session.
 
+- `npx shadcn@latest add <component>` from `apps/playground` (documented above) currently fails
+  with "Could not load the workspace config in packages/ui" / "Could not resolve the following
+  aliases" once `@packages/ui` is a separate pnpm workspace package - the CLI's monorepo
+  detection now wants `packages/ui` to carry its own `components.json` and tsconfig path
+  aliases that resolve `@ui/*` to itself, neither of which exist there by design. Tried pinning
+  older `shadcn` versions (4.18.0, still broke) and adding a scratch `components.json` /
+  tsconfig paths entry in `packages/ui` (worked partway, still broke on `@ui/utils`). Given the
+  small number of primitives involved, the direct path is to hand-write the component in
+  `packages/ui/src` copying shadcn's canonical implementation (radix-ui import, `cn` from
+  `./utils`, `data-slot` attributes) - see `tabs.tsx` for the pattern other components already
+  follow.
+- React Flow (`@xyflow/react`) node overlap silently breaks connection dragging: each node's
+  outer `.react-flow__node` wrapper gets `pointer-events: all` and a z-index the library raises
+  for the more-recently-added/selected node, so when two nodes visually overlap, the top node's
+  own body captures clicks meant for a handle on the node underneath - the drag starts but no
+  `onConnect` fires, with no console error. This is very easy to trigger by dropping a palette
+  component near the default `Cliente` node. Reproduced and confirmed live with
+  `chrome-devtools-axi drag` between tagged handles (see the technique above) before and after:
+  overlapping nodes fail to connect, non-overlapping ones connect on the first try. Fixed at the
+  source in `UrlShortener.tsx`'s `onDrop` via `canvas/layout.ts`'s `findFreeDropPosition`, which
+  nudges a freshly-dropped node's position diagonally until it clears every existing node's
+  footprint, rather than trying to fight React Flow's per-node stacking contexts with CSS.
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.

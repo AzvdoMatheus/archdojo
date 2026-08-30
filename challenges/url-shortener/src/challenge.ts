@@ -22,6 +22,8 @@ const PEAK_MULTIPLIER = 3;
 export const urlShortenerChallenge = {
   slug: "url-shortener",
   title: "URL Shortener",
+  difficulty: "Fácil",
+  summary: "Desenhe um encurtador de URLs estilo TinyURL/bit.ly: escrita rara, leitura em massa.",
   context:
     "Um serviço estilo TinyURL/bit.ly: o usuário envia uma URL longa e recebe uma URL curta; " +
     "acessar a URL curta redireciona (HTTP 301/302) para a URL longa original.",

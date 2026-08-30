@@ -15,6 +15,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ArchNode } from "./canvas/ArchNode";
+import { findFreeDropPosition } from "./canvas/layout";
 import type { ArchFlowNode, ArchNodeData } from "./canvas/types";
 import { urlShortenerChallenge } from "./challenge";
 import { ChallengeBrief } from "./components/ChallengeBrief";
@@ -79,22 +80,28 @@ function CanvasBoard() {
       if (!kind) return;
 
       const def = getComponentDefinition(kind);
-      const position = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+      const dropPosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
       const id = nextNodeId(kind);
 
-      const newNode: ArchFlowNode = {
-        id,
-        type: "archNode",
-        position,
-        data: {
-          kind,
-          label: def.label,
-          replicas: def.defaultReplicas,
-          capacityPerReplicaRps: def.defaultCapacityPerReplicaRps,
-          cacheHitRate: def.defaultCacheHitRate,
-        },
-      };
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => {
+        const position = findFreeDropPosition(
+          dropPosition,
+          nds.map((n) => n.position),
+        );
+        const newNode: ArchFlowNode = {
+          id,
+          type: "archNode",
+          position,
+          data: {
+            kind,
+            label: def.label,
+            replicas: def.defaultReplicas,
+            capacityPerReplicaRps: def.defaultCapacityPerReplicaRps,
+            cacheHitRate: def.defaultCacheHitRate,
+          },
+        };
+        return nds.concat(newNode);
+      });
     },
     [screenToFlowPosition, setNodes],
   );
@@ -149,9 +156,9 @@ function CanvasBoard() {
   }, [nodes, edges, setNodes]);
 
   return (
-    <div className="font-pixel-mono text-fg flex h-[calc(100vh-3rem)] min-h-0 flex-col gap-4 text-lg">
+    <div className="font-pixel-mono text-fg flex h-full min-h-0 flex-col gap-2 p-3 text-lg">
       <ChallengeBrief />
-      <div className="grid min-h-0 flex-1 grid-cols-[240px_1fr_300px] gap-4">
+      <div className="grid min-h-0 flex-1 grid-cols-[auto_1fr_260px] gap-3">
         <Palette />
         <div
           className="border-line-2 bg-panel relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border-2"
