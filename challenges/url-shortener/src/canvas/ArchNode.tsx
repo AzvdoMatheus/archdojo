@@ -1,4 +1,5 @@
 import { Handle, type NodeProps, Position } from "@xyflow/react";
+import { PixelIcon } from "../components/PixelIcon";
 import { getComponentDefinition } from "../components/definitions";
 import type { ArchFlowNode } from "./types";
 
@@ -19,28 +20,44 @@ export function ArchNode({ data, selected }: NodeProps<ArchFlowNode>) {
   const result = data.kind !== "client" ? data.simResult : undefined;
   const overloaded = result?.overloaded ?? false;
 
+  const borderClass = overloaded
+    ? "border-neon-danger shadow-[0_0_12px_rgba(255,46,110,0.35)] animate-overload"
+    : selected
+      ? "border-neon-cyan shadow-[0_0_10px_rgba(0,229,255,0.3)]"
+      : "border-line-2";
+
   return (
     <div
-      className={`arch-node${selected ? " arch-node--selected" : ""}${overloaded ? " arch-node--overloaded" : ""}`}
+      className={`min-w-[150px] rounded-md border-2 bg-gradient-to-b from-[rgba(124,58,237,0.08)] to-black/20 p-3 font-pixel-mono text-fg ${borderClass}`}
     >
       {data.kind !== "client" && <Handle type="target" position={Position.Left} />}
-      <div className="arch-node__header">
-        <span className="arch-node__icon">{def.icon}</span>
-        <span className="arch-node__label">{data.label}</span>
+      <div className="flex items-center gap-2">
+        <span className="border-line-2 bg-panel-2 flex h-8 w-8 flex-none items-center justify-center rounded border text-neon-purple">
+          <PixelIcon name={def.icon} size="md" />
+        </span>
+        <span className="text-lg">{data.label}</span>
       </div>
-      <div className="arch-node__meta">
+      <div className="text-muted mt-1 text-base">
         {data.kind !== "client" ? `x${data.replicas}` : "fonte de tráfego"}
       </div>
       {result && (
-        <div className="arch-node__stats">
-          <span className={`arch-node__stat${overloaded ? " arch-node__stat--danger" : ""}`}>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <span
+            className={`border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm ${overloaded ? "border-neon-danger text-neon-danger" : "text-neon-cyan"}`}
+          >
             {(result.utilization * 100).toFixed(0)}%
           </span>
-          <span className="arch-node__stat">{formatMs(result.latencyMs)}</span>
-          <span className="arch-node__stat">{formatRps(result.outputRps)} rps</span>
+          <span className="border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm text-neon-cyan">
+            {formatMs(result.latencyMs)}
+          </span>
+          <span className="border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm text-neon-cyan">
+            {formatRps(result.outputRps)} rps
+          </span>
         </div>
       )}
-      {overloaded && <div className="arch-node__badge">SOBRECARGA</div>}
+      {overloaded && (
+        <div className="font-arcade mt-1.5 text-[9px] text-neon-danger">SOBRECARGA</div>
+      )}
       <Handle type="source" position={Position.Right} />
     </div>
   );

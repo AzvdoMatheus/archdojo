@@ -1,85 +1,84 @@
-:root {
-  color-scheme: dark;
-  --dojo-bg: #0b0e17;
-  --dojo-bg-alt: #12172b;
-  --dojo-panel: #171d33;
-  --dojo-border: #3a4a8a;
-  --dojo-accent: #ffd23f;
-  --dojo-accent-2: #24e0c9;
-  --dojo-danger: #ff4d6d;
-  --dojo-text: #e7ecff;
-  --dojo-text-dim: #8f9bc7;
-  --dojo-font-heading: "Press Start 2P", "Courier New", monospace;
-  --dojo-font-body: "VT323", "Courier New", monospace;
-  font-family: var(--dojo-font-body);
+@import "tailwindcss";
+
+/* Tailwind's automatic content scan is rooted at this app; challenge packages are
+   separate pnpm workspace packages the scan never reaches on its own, so their
+   className usage (e.g. challenges/url-shortener/src/**) needs an explicit source. */
+@source "../../../challenges";
+
+/*
+ * "Arcade Neon" theme tokens, decided by the captain
+ * (see /Users/matheusazevedo/firstmate/data/archdojo/ui-arcade-design.html).
+ * Defining these in @theme makes Tailwind generate matching utilities:
+ * bg-ink, text-neon-cyan, border-neon-magenta, font-arcade, etc.
+ */
+@theme {
+  --color-ink: #08060f;
+  --color-ink-2: #0d0e14;
+  --color-panel: #15161f;
+  --color-panel-2: #1a0f24;
+  --color-line: #262838;
+  --color-line-2: #3a1f4d;
+  --color-muted: #9aa0b4;
+  --color-fg: #e7e9f0;
+  --color-neon-magenta: #ff2ea6;
+  --color-neon-cyan: #00e5ff;
+  --color-neon-gold: #ffd23f;
+  --color-neon-danger: #ff2e6e;
+  --color-neon-green: #4bffb0;
+  --color-neon-purple: #7c3aed;
+
+  --font-arcade: "Silkscreen", "Press Start 2P", monospace;
+  --font-pixel-mono: "VT323", monospace;
 }
 
-body {
-  margin: 0;
-  background: var(--dojo-bg);
-  color: var(--dojo-text);
+@layer base {
+  body {
+    background: var(--color-ink-2);
+    color: var(--color-fg);
+    font-family: var(--font-pixel-mono);
+  }
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  min-height: 100vh;
-  background: radial-gradient(circle at 20% -10%, #1c2550 0%, var(--dojo-bg) 55%);
+/* Pixel icon font ships font-size:24px by default; these mirror the reference mockup's overrides. */
+[class^="pixelart-icons-font-"],
+[class*=" pixelart-icons-font-"] {
+  line-height: 1;
+  vertical-align: middle;
+}
+.icon-sm {
+  font-size: 14px !important;
+}
+.icon-md {
+  font-size: 20px !important;
+}
+.icon-lg {
+  font-size: 22px !important;
 }
 
-.sidebar {
-  border-right: 4px solid var(--dojo-border);
-  padding: 1.5rem 1rem;
-  background: var(--dojo-bg-alt);
+/* CRT scanline texture used behind the arcade stage; not expressible as plain utilities. */
+.arcade-scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 2.5%) 0px,
+    rgb(255 255 255 / 2.5%) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
 }
 
-.sidebar h1 {
-  font-family: var(--dojo-font-heading);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0 0 1.5rem;
-  color: var(--dojo-accent);
-  text-shadow: 2px 2px 0 #7a5b00;
+@keyframes overload-glow {
+  0%,
+  100% {
+    box-shadow: 3px 3px 0 #000;
+  }
+  50% {
+    box-shadow: 3px 3px 14px var(--color-neon-danger);
+  }
 }
-
-.sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sidebar a {
-  display: block;
-  padding: 0.5rem 0.75rem;
-  border: 2px solid transparent;
-  text-decoration: none;
-  color: var(--dojo-text-dim);
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
-}
-
-.sidebar a.active {
-  background: var(--dojo-panel);
-  border-color: var(--dojo-accent-2);
-  color: var(--dojo-text);
-}
-
-.content {
-  padding: 1.5rem;
-  min-width: 0;
-}
-
-.empty-state {
-  color: var(--dojo-text-dim);
-  line-height: 1.6;
-  font-size: 1.2rem;
-}
-
-.empty-state code {
-  background: var(--dojo-panel);
-  padding: 0.1rem 0.4rem;
-  border: 1px solid var(--dojo-border);
+.animate-overload {
+  animation: overload-glow 1s infinite;
 }

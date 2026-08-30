@@ -11,6 +11,7 @@ export interface ComponentDefinition {
   kind: ComponentKind;
   label: string;
   category: ComponentCategory;
+  /** pixelarticons slug (without the "pixelart-icons-font-" prefix), e.g. "server". */
   icon: string;
   /** What it is, in plain language. */
   description: string;
@@ -31,7 +32,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "client",
     label: "Cliente",
     category: "Cliente",
-    icon: "🎮",
+    icon: "gamepad",
     description: "O navegador/app do usuário final: quem cria e acessa URLs curtas.",
     whenToUse: "Todo desenho de arquitetura começa aqui - é a fonte de tráfego da simulação.",
     tradeoff: "Nenhum trade-off: é o ponto de partida, não uma peça que você escolhe adicionar.",
@@ -43,7 +44,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "load_balancer",
     label: "Load Balancer",
     category: "Tráfego & Edge",
-    icon: "⚖️",
+    icon: "shuffle",
     description: "Distribui as requisições recebidas entre várias réplicas de um serviço.",
     whenToUse:
       "Use quando tiver mais de uma réplica de um serviço e precisar espalhar carga entre elas.",
@@ -56,7 +57,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "cdn",
     label: "CDN",
     category: "Tráfego & Edge",
-    icon: "🌐",
+    icon: "cloud-server",
     description:
       "Rede de servidores de borda que fica geograficamente perto do usuário e guarda respostas em cache.",
     whenToUse:
@@ -71,7 +72,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "api_gateway",
     label: "API Gateway",
     category: "Tráfego & Edge",
-    icon: "🚪",
+    icon: "shield",
     description:
       "Porta de entrada única da API: roteamento, autenticação, rate limiting antes de chegar nos serviços.",
     whenToUse:
@@ -85,7 +86,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "app_server",
     label: "App Server",
     category: "Computação",
-    icon: "🖥️",
+    icon: "server",
     description:
       "Executa a lógica de negócio: gera códigos curtos, valida entradas, orquestra o redirecionamento.",
     whenToUse: "É onde a regra de negócio do desafio (encurtar/redirecionar) realmente roda.",
@@ -97,7 +98,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "cache",
     label: "Cache",
     category: "Armazenamento",
-    icon: "⚡",
+    icon: "zap",
     description: "Armazena em memória os pares código-curto → URL-longa mais acessados.",
     whenToUse:
       "O acesso a URLs curtas segue uma distribuição bem desigual (poucas URLs concentram a maior parte dos acessos) - cache reduz drasticamente a carga no banco.",
@@ -111,7 +112,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "sql_db",
     label: "Banco SQL",
     category: "Armazenamento",
-    icon: "🗄️",
+    icon: "database",
     description: "Banco relacional com esquema fixo e transações ACID.",
     whenToUse:
       "Bom quando você precisa de consistência forte e relações bem definidas (ex.: código curto único).",
@@ -124,7 +125,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "nosql_db",
     label: "Banco NoSQL",
     category: "Armazenamento",
-    icon: "🧩",
+    icon: "grid-3x3",
     description:
       "Banco chave-valor ou de documentos, sem esquema rígido, feito para escalar horizontalmente.",
     whenToUse:
@@ -138,7 +139,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "message_queue",
     label: "Fila / Pub-Sub",
     category: "Mensageria",
-    icon: "📬",
+    icon: "inbox",
     description: "Enfileira mensagens entre serviços para processamento assíncrono e desacoplado.",
     whenToUse:
       "Use para trabalho que não precisa de resposta síncrona (ex.: registrar analytics de cliques, gerar relatórios).",
@@ -151,7 +152,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     kind: "worker",
     label: "Worker",
     category: "Computação",
-    icon: "⚙️",
+    icon: "gear",
     description:
       "Processo que consome mensagens de uma fila e executa trabalho assíncrono em segundo plano.",
     whenToUse:

@@ -19,9 +19,27 @@ This file is the project's committed home for project-intrinsic agent knowledge:
   design - keep new challenges' simulation math there rather than inside components, so
   it stays unit-testable without mounting React Flow.
 - React Flow needs a real, bounded height on the whole ancestor chain down to `.react-flow`
-  (flex/grid tracks with `min-height: 0` at every level) or the canvas silently grows to fit
-  node content instead of the viewport. See `UrlShortener.css` (`.dojo-shell`, `.dojo-workspace`,
-  `.dojo-canvas-wrapper`) for a working pattern.
+  (flex/grid tracks with `min-h-0` at every level) or the canvas silently grows to fit node
+  content instead of the viewport. See the Tailwind classes on `UrlShortener.tsx`'s root,
+  workspace grid, and canvas wrapper divs for a working pattern.
+- Styling is Tailwind CSS v4 (via `@tailwindcss/vite` in `apps/playground/vite.config.ts`),
+  entry point `apps/playground/src/App.css`. Tailwind v4's automatic content scan is rooted
+  at the app and does NOT reach sibling pnpm workspace packages like `challenges/*` on its
+  own - that CSS file has an explicit `@source "../../../challenges"` for exactly this
+  reason. Any new challenge package using Tailwind classes needs no extra config (this one
+  `@source` covers the whole `challenges/` directory), but if a similar case shows up
+  elsewhere (e.g. a `packages/*` UI lib), add another `@source` line rather than assuming
+  the scan finds it.
+- Visual direction is "Arcade Neon" (decided by the captain, mockup preserved at
+  `/Users/matheusazevedo/firstmate/data/archdojo/ui-arcade-design.html` outside the repo):
+  Silkscreen/Press Start 2P for UI chrome, VT323 for smaller monospace text, magenta/cyan/gold
+  neon accents on a near-black background, pixelarticons (CDN, see `index.html`) instead of
+  emoji for icons. Theme tokens (colors, fonts) live in `App.css`'s `@theme` block - reuse
+  those tokens (`text-neon-cyan`, `font-arcade`, etc.) rather than hardcoding hex values.
+  Component icon names are pixelarticons slugs (e.g. `"server"`, `"database"`) stored on
+  `ComponentDefinition.icon` and rendered via the shared `PixelIcon` component - check
+  https://unpkg.com/pixelarticons@2.4.1/fonts/pixelart-icons-font.css for valid slugs before
+  inventing a new one; a wrong slug renders as an invisible/empty glyph with no error.
 - Manually driving the React Flow canvas with `chrome-devtools-axi`: `drag @<ref> @<ref>`
   (CDP-level, works for both the HTML5 palette drag-and-drop and node-to-node edge
   connections) needs real accessible refs, but React Flow's `.react-flow__handle` elements

@@ -20,10 +20,10 @@ import { ChallengeBrief } from "./components/ChallengeBrief";
 import { EvaluationPlaceholder } from "./components/EvaluationPlaceholder";
 import { Inspector } from "./components/Inspector";
 import { PALETTE_DRAG_MIME, Palette } from "./components/Palette";
+import { PixelIcon } from "./components/PixelIcon";
 import { getComponentDefinition } from "./components/definitions";
 import { simulate } from "./simulation/engine";
 import type { ComponentKind, SimEdge, SimNodeConfig } from "./simulation/types";
-import "./UrlShortener.css";
 
 const nodeTypes = { archNode: ArchNode };
 
@@ -148,18 +148,27 @@ function CanvasBoard() {
   }, [nodes, edges, setNodes]);
 
   return (
-    <div className="dojo-shell">
+    <div className="font-pixel-mono text-fg flex h-[calc(100vh-3rem)] min-h-0 flex-col gap-4 text-lg">
       <ChallengeBrief />
-      <div className="dojo-workspace">
+      <div className="grid min-h-0 flex-1 grid-cols-[240px_1fr_300px] gap-4">
         <Palette />
-        <div className="dojo-canvas-wrapper" ref={wrapperRef}>
-          <div className="dojo-toolbar">
-            <button type="button" className="dojo-simulate-btn" onClick={handleSimulate}>
-              ▶ Simular ({urlShortenerChallenge.simulationTrafficRps.toLocaleString("pt-BR")} req/s)
+        <div
+          className="border-line-2 bg-panel relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg border-2"
+          ref={wrapperRef}
+        >
+          <div className="border-line-2 z-10 flex items-center gap-4 border-b-2 px-3 py-2.5">
+            <button
+              type="button"
+              className="font-arcade text-ink flex items-center gap-2 rounded bg-neon-magenta px-4 py-2.5 text-[9px] shadow-[0_3px_0_#a4155f] active:translate-y-px active:shadow-[0_1px_0_#a4155f]"
+              onClick={handleSimulate}
+            >
+              <PixelIcon name="play" size="sm" />
+              Simular ({urlShortenerChallenge.simulationTrafficRps.toLocaleString("pt-BR")} req/s)
             </button>
-            {simError && <span className="dojo-sim-error">{simError}</span>}
+            {simError && <span className="text-neon-danger text-base">{simError}</span>}
           </div>
           <ReactFlow
+            className="!bg-ink"
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -178,7 +187,7 @@ function CanvasBoard() {
             <MiniMap pannable zoomable />
           </ReactFlow>
         </div>
-        <div className="dojo-side-panel">
+        <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
           <Inspector selectedNode={selectedNode} onUpdate={handleUpdate} onDelete={handleDelete} />
           <EvaluationPlaceholder />
         </div>
