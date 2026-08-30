@@ -15,10 +15,12 @@ function EmptyState() {
 }
 
 export function App() {
+  const firstChallenge = challenges[0];
+
   return (
     <div className="layout">
       <nav className="sidebar">
-        <h1>Design System Playground</h1>
+        <h1>Arch Dojo</h1>
         <ul>
           {challenges.map((challenge) => (
             <li key={challenge.slug}>
@@ -29,7 +31,12 @@ export function App() {
       </nav>
       <main className="content">
         <Routes>
-          <Route path="/" element={<EmptyState />} />
+          <Route
+            path="/"
+            element={
+              firstChallenge ? <Navigate to={`/${firstChallenge.slug}`} replace /> : <EmptyState />
+            }
+          />
           {challenges.map(({ slug, Component }) => (
             <Route key={slug} path={`/${slug}`} element={<Component />} />
           ))}

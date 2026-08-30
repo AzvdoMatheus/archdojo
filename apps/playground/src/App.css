@@ -1,27 +1,45 @@
 :root {
-  color-scheme: light dark;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+  --dojo-bg: #0b0e17;
+  --dojo-bg-alt: #12172b;
+  --dojo-panel: #171d33;
+  --dojo-border: #3a4a8a;
+  --dojo-accent: #ffd23f;
+  --dojo-accent-2: #24e0c9;
+  --dojo-danger: #ff4d6d;
+  --dojo-text: #e7ecff;
+  --dojo-text-dim: #8f9bc7;
+  --dojo-font-heading: "Press Start 2P", "Courier New", monospace;
+  --dojo-font-body: "VT323", "Courier New", monospace;
+  font-family: var(--dojo-font-body);
 }
 
 body {
   margin: 0;
+  background: var(--dojo-bg);
+  color: var(--dojo-text);
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 260px 1fr;
   min-height: 100vh;
+  background: radial-gradient(circle at 20% -10%, #1c2550 0%, var(--dojo-bg) 55%);
 }
 
 .sidebar {
-  border-right: 1px solid light-dark(#e2e2e2, #333);
+  border-right: 4px solid var(--dojo-border);
   padding: 1.5rem 1rem;
+  background: var(--dojo-bg-alt);
 }
 
 .sidebar h1 {
+  font-family: var(--dojo-font-heading);
   font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 1rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  color: var(--dojo-accent);
+  text-shadow: 2px 2px 0 #7a5b00;
 }
 
 .sidebar ul {
@@ -30,33 +48,38 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .sidebar a {
   display: block;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid transparent;
   text-decoration: none;
-  color: inherit;
+  color: var(--dojo-text-dim);
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
 }
 
 .sidebar a.active {
-  background: light-dark(#eee, #2a2a2a);
-  font-weight: 600;
+  background: var(--dojo-panel);
+  border-color: var(--dojo-accent-2);
+  color: var(--dojo-text);
 }
 
 .content {
-  padding: 2rem;
+  padding: 1.5rem;
+  min-width: 0;
 }
 
 .empty-state {
-  color: light-dark(#666, #999);
+  color: var(--dojo-text-dim);
   line-height: 1.6;
+  font-size: 1.2rem;
 }
 
 .empty-state code {
-  background: light-dark(#f0f0f0, #2a2a2a);
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+  background: var(--dojo-panel);
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--dojo-border);
 }
