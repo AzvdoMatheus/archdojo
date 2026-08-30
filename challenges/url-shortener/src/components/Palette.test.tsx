@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { Palette } from "./Palette";
 import { componentDefinitions } from "./definitions";
@@ -9,8 +10,7 @@ describe("Palette", () => {
 
     for (const def of componentDefinitions) {
       if (def.kind === "client") continue;
-      // Label appears twice per component: once on the draggable card, once in its tooltip title.
-      expect(screen.getAllByText(def.label).length).toBeGreaterThan(0);
+      expect(screen.getByText(def.label)).toBeInTheDocument();
     }
     // Client is placed on the canvas by default; it should not be draggable from the palette.
     expect(screen.queryByRole("button", { name: /Cliente/ })).not.toBeInTheDocument();
@@ -35,12 +35,15 @@ describe("Palette", () => {
     expect(dataTransfer.data.get("application/archdojo-component-kind")).toBe("cache");
   });
 
-  it("exposes the teach-the-beginner explanation for every component via a tooltip", () => {
+  it("exposes the teach-the-beginner explanation for every component via a popover", async () => {
+    const user = userEvent.setup();
     render(<Palette />);
     const cache = componentDefinitions.find((d) => d.kind === "cache");
     if (!cache) throw new Error("expected cache definition to exist");
 
-    expect(screen.getByText(cache.description, { exact: false })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Cache/ }));
+
+    expect(await screen.findByText(cache.description, { exact: false })).toBeInTheDocument();
     expect(screen.getByText(cache.tradeoff, { exact: false })).toBeInTheDocument();
   });
 });

@@ -24,12 +24,28 @@ This file is the project's committed home for project-intrinsic agent knowledge:
   workspace grid, and canvas wrapper divs for a working pattern.
 - Styling is Tailwind CSS v4 (via `@tailwindcss/vite` in `apps/playground/vite.config.ts`),
   entry point `apps/playground/src/App.css`. Tailwind v4's automatic content scan is rooted
-  at the app and does NOT reach sibling pnpm workspace packages like `challenges/*` on its
-  own - that CSS file has an explicit `@source "../../../challenges"` for exactly this
-  reason. Any new challenge package using Tailwind classes needs no extra config (this one
-  `@source` covers the whole `challenges/` directory), but if a similar case shows up
-  elsewhere (e.g. a `packages/*` UI lib), add another `@source` line rather than assuming
-  the scan finds it.
+  at the app and does NOT reach sibling pnpm workspace packages on its own - that CSS file
+  has explicit `@source "../../../challenges"` and `@source "../../../packages"` lines for
+  exactly this reason. A new workspace package that uses Tailwind classes (challenge or
+  shared lib) needs no extra config as long as it lives under one of those two directories;
+  a package anywhere else needs its own `@source` line - don't assume the scan finds it,
+  verify by grepping the served `/src/App.css` for one of that package's classnames.
+- UI primitives (Button, Card, Badge, Tooltip, Popover, ...) live in `packages/ui/src`,
+  a shared pnpm package (`@packages/ui`), not inside `apps/playground` - they were generated
+  there by shadcn/ui's `init`/`add` CLI (`components.json`'s aliases point `ui`/`utils`/`lib`
+  at `@ui` -> `packages/ui/src`) and then physically moved so both the app shell and any
+  challenge package can import them via `@packages/ui`, avoiding a circular workspace
+  dependency (a challenge importing from the app that imports the challenge). Run future
+  `npx shadcn@latest add <component>` from `apps/playground` - the CLI will write straight
+  into `packages/ui/src` given the current `components.json`.
+- shadcn/ui's semantic theme tokens (`--muted`, `--card`, `--primary`, ...) and this app's
+  own "Arcade Neon" tokens (`--color-*` in the first `@theme` block of `App.css`) are two
+  separate systems remapped onto the same palette - do not give one of your own custom
+  `--color-*` tokens the same bare name as one of shadcn's semantic tokens (e.g. defining
+  both a custom `--color-muted` "muted text" token AND shadcn's `--muted-foreground: var(--color-muted)` mapping). Whichever `@theme`/`@theme inline` block is later in the file wins
+  and silently reassigns the other's meaning - this happened once and made all
+  `text-muted-foreground` text render invisible (foreground == background). Use
+  `text-muted-foreground` (shadcn's token) for muted text, not a custom `--color-muted`.
 - Visual direction is "Arcade Neon" (decided by the captain, mockup preserved at
   `/Users/matheusazevedo/firstmate/data/archdojo/ui-arcade-design.html` outside the repo):
   Silkscreen/Press Start 2P for UI chrome, VT323 for smaller monospace text, magenta/cyan/gold

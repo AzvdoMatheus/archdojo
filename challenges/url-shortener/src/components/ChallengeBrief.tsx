@@ -19,12 +19,12 @@ export function ChallengeBrief() {
           <tbody>
             {urlShortenerChallenge.nonFunctionalRequirements.map((req) => (
               <tr key={req.label}>
-                <th className="text-muted w-56 py-1 pr-3 text-left align-top font-normal whitespace-nowrap">
+                <th className="text-muted-foreground w-56 py-1 pr-3 text-left align-top font-normal whitespace-nowrap">
                   {req.label}
                 </th>
                 <td className="py-1">
                   {req.value}
-                  <div className="text-muted text-base">{req.note}</div>
+                  <div className="text-muted-foreground text-base">{req.note}</div>
                 </td>
               </tr>
             ))}

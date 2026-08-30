@@ -1,3 +1,4 @@
+import { Button } from "@packages/ui";
 import {
   Background,
   type Connection,
@@ -157,14 +158,14 @@ function CanvasBoard() {
           ref={wrapperRef}
         >
           <div className="border-line-2 z-10 flex items-center gap-4 border-b-2 px-3 py-2.5">
-            <button
+            <Button
               type="button"
-              className="font-arcade text-ink flex items-center gap-2 rounded bg-neon-magenta px-4 py-2.5 text-[9px] shadow-[0_3px_0_#a4155f] active:translate-y-px active:shadow-[0_1px_0_#a4155f]"
+              className="font-arcade text-ink h-auto gap-2 rounded bg-neon-magenta px-4 py-2.5 text-[9px] shadow-[0_3px_0_#a4155f] hover:bg-neon-magenta active:translate-y-px active:shadow-[0_1px_0_#a4155f]"
               onClick={handleSimulate}
             >
               <PixelIcon name="play" size="sm" />
               Simular ({urlShortenerChallenge.simulationTrafficRps.toLocaleString("pt-BR")} req/s)
-            </button>
+            </Button>
             {simError && <span className="text-neon-danger text-base">{simError}</span>}
           </div>
           <ReactFlow

@@ -46,6 +46,7 @@ pnpm test:watch        # vitest em modo watch
 - React + TypeScript (strict) via `tsconfig.base.json`
 - Vite (dev server + build do playground)
 - React Router (navegação entre desafios)
+- Tailwind CSS v4 + shadcn/ui (`packages/ui`) para estilização
 - Biome (lint + format)
 - pnpm workspaces (monorepo)
 - Vitest + Testing Library (testes de componente)

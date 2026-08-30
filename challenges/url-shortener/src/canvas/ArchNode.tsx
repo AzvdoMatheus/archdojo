@@ -1,3 +1,4 @@
+import { Badge } from "@packages/ui";
 import { Handle, type NodeProps, Position } from "@xyflow/react";
 import { PixelIcon } from "../components/PixelIcon";
 import { getComponentDefinition } from "../components/definitions";
@@ -37,22 +38,29 @@ export function ArchNode({ data, selected }: NodeProps<ArchFlowNode>) {
         </span>
         <span className="text-lg">{data.label}</span>
       </div>
-      <div className="text-muted mt-1 text-base">
+      <div className="text-muted-foreground mt-1 text-base">
         {data.kind !== "client" ? `x${data.replicas}` : "fonte de tráfego"}
       </div>
       {result && (
         <div className="mt-2 flex flex-wrap gap-1.5">
-          <span
-            className={`border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm ${overloaded ? "border-neon-danger text-neon-danger" : "text-neon-cyan"}`}
+          <Badge
+            variant="outline"
+            className={`font-pixel-mono rounded border-line-2 bg-ink text-sm ${overloaded ? "border-neon-danger text-neon-danger" : "text-neon-cyan"}`}
           >
             {(result.utilization * 100).toFixed(0)}%
-          </span>
-          <span className="border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm text-neon-cyan">
+          </Badge>
+          <Badge
+            variant="outline"
+            className="font-pixel-mono border-line-2 bg-ink rounded text-sm text-neon-cyan"
+          >
             {formatMs(result.latencyMs)}
-          </span>
-          <span className="border-line-2 bg-ink rounded border px-1.5 py-0.5 text-sm text-neon-cyan">
+          </Badge>
+          <Badge
+            variant="outline"
+            className="font-pixel-mono border-line-2 bg-ink rounded text-sm text-neon-cyan"
+          >
             {formatRps(result.outputRps)} rps
-          </span>
+          </Badge>
         </div>
       )}
       {overloaded && (

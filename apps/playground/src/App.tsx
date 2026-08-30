@@ -4,7 +4,7 @@ import { challenges } from "./challenges/registry";
 
 function EmptyState() {
   return (
-    <div className="text-muted p-8 text-lg leading-relaxed">
+    <div className="text-muted-foreground p-8 text-lg leading-relaxed">
       <p>Nenhum desafio cadastrado ainda.</p>
       <p>
         Copie{" "}
@@ -36,7 +36,7 @@ export function App() {
               <NavLink
                 to={`/${challenge.slug}`}
                 className={({ isActive }) =>
-                  `text-muted block rounded border-2 px-3 py-2 text-lg tracking-wide no-underline ${
+                  `text-muted-foreground block rounded border-2 px-3 py-2 text-lg tracking-wide no-underline ${
                     isActive
                       ? "border-neon-cyan text-fg bg-panel shadow-[0_0_10px_rgba(0,229,255,0.35)]"
                       : "border-transparent"
