@@ -1,62 +1,130 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Tailwind's automatic content scan is rooted at this app; challenge and shared-ui
+   packages are separate pnpm workspace packages the scan never reaches on its own,
+   so their className usage needs an explicit source each. */
+@source "../../../challenges";
+@source "../../../packages";
+
+/*
+ * "Arcade Neon" theme, decided by the captain
+ * (see /Users/matheusazevedo/firstmate/data/archdojo/ui-arcade-design.html).
+ * Extra tokens (neon-*, ink-*, panel-*, line-*, pixel fonts) feed our own custom
+ * utilities (text-neon-cyan, font-arcade, ...); the shadcn/ui semantic tokens
+ * below (--background, --primary, --card, ...) are remapped to the same palette
+ * so every shadcn component (Button, Card, Badge, Tooltip, Popover) reads as
+ * arcade-neon out of the box instead of shadcn's default gray theme.
+ */
+@theme {
+  --color-ink: #08060f;
+  --color-ink-2: #0d0e14;
+  --color-panel: #15161f;
+  --color-panel-2: #1a0f24;
+  --color-line: #262838;
+  --color-line-2: #3a1f4d;
+  --color-fg: #e7e9f0;
+  --color-neon-magenta: #ff2ea6;
+  --color-neon-cyan: #00e5ff;
+  --color-neon-gold: #ffd23f;
+  --color-neon-danger: #ff2e6e;
+  --color-neon-green: #4bffb0;
+  --color-neon-purple: #7c3aed;
+
+  --font-arcade: "Silkscreen", "Press Start 2P", monospace;
+  --font-pixel-mono: "VT323", monospace;
+}
+
 :root {
-  color-scheme: light dark;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 0.5rem;
+  --background: var(--color-ink-2);
+  --foreground: var(--color-fg);
+  --card: var(--color-panel);
+  --card-foreground: var(--color-fg);
+  --popover: var(--color-ink-2);
+  --popover-foreground: var(--color-fg);
+  --primary: var(--color-neon-magenta);
+  --primary-foreground: var(--color-ink);
+  --secondary: var(--color-panel-2);
+  --secondary-foreground: var(--color-fg);
+  --muted: var(--color-panel);
+  /* Not aliased to a --color-* token: shadcn's own @theme inline block below maps
+     --color-muted to --muted (its "muted background" semantic), so a same-named
+     --color-muted here would silently shadow it and break text-muted-foreground. */
+  --muted-foreground: #9aa0b4;
+  --accent: var(--color-neon-cyan);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-neon-danger);
+  --border: var(--color-line-2);
+  --input: var(--color-line-2);
+  --ring: var(--color-neon-cyan);
 }
 
-body {
-  margin: 0;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --font-sans: var(--font-pixel-mono);
+  --font-heading: var(--font-arcade);
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
+@layer base {
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
 }
 
-.sidebar {
-  border-right: 1px solid light-dark(#e2e2e2, #333);
-  padding: 1.5rem 1rem;
+/* Pixel icon font ships font-size:24px by default; these mirror the reference mockup's overrides. */
+[class^="pixelart-icons-font-"],
+[class*=" pixelart-icons-font-"] {
+  line-height: 1;
+  vertical-align: middle;
+}
+.icon-sm {
+  font-size: 14px !important;
+}
+.icon-md {
+  font-size: 20px !important;
+}
+.icon-lg {
+  font-size: 22px !important;
 }
 
-.sidebar h1 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 1rem;
+@keyframes overload-glow {
+  0%,
+  100% {
+    box-shadow: 3px 3px 0 #000;
+  }
+  50% {
+    box-shadow: 3px 3px 14px var(--color-neon-danger);
+  }
 }
-
-.sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.sidebar a {
-  display: block;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.sidebar a.active {
-  background: light-dark(#eee, #2a2a2a);
-  font-weight: 600;
-}
-
-.content {
-  padding: 2rem;
-}
-
-.empty-state {
-  color: light-dark(#666, #999);
-  line-height: 1.6;
-}
-
-.empty-state code {
-  background: light-dark(#f0f0f0, #2a2a2a);
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+.animate-overload {
+  animation: overload-glow 1s infinite;
 }

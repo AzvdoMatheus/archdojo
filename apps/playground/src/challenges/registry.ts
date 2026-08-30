@@ -1,3 +1,4 @@
+import { UrlShortener } from "@challenges/url-shortener";
 import type { ComponentType } from "react";
 
 export interface ChallengeEntry {
@@ -8,12 +9,7 @@ export interface ChallengeEntry {
 
 /**
  * Cada novo desafio se registra aqui pra aparecer na navegação do playground.
- * Exemplo:
- *
- * import { UrlShortener } from "@challenges/url-shortener";
- *
- * export const challenges: ChallengeEntry[] = [
- *   { slug: "url-shortener", title: "URL Shortener", Component: UrlShortener },
- * ];
  */
-export const challenges: ChallengeEntry[] = [];
+export const challenges: ChallengeEntry[] = [
+  { slug: "url-shortener", title: "URL Shortener", Component: UrlShortener },
+];
