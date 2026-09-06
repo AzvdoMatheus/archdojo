@@ -3,6 +3,17 @@
 This file is the project's committed home for project-intrinsic agent knowledge: build, test, release, architecture, and sharp-edge notes that should travel with the code.
 
 - Add durable project-specific notes here as they are discovered through real work.
+- Home.tsx's "Desafios" tab merges two sources for display: real, playable entries from
+  `challenges/registry.ts` and purely-visual placeholders from
+  `apps/playground/src/mock/challenges.ts` (`status: "mock"`). Mock entries render as
+  disabled/"Em breve" cards, never as `Link`s, and are not registered anywhere routable -
+  don't wire a mock slug into a real route without first building the actual challenge.
+  Mock player/XP state lives in `apps/playground/src/mock/player.ts` behind a `usePlayer()`
+  hook for the same reason: swap the module, not the callers, once real auth/progress exists.
+- `apps/playground/tsconfig*.json` has `noUncheckedIndexedAccess` on, so any array index
+  access (`arr[i]`) types as possibly-`undefined` even right after a length check - prefer
+  `for...of`/`.map()` with element params, or an explicit null-carrying accumulator, over
+  manual indexing when generating derived data (see `apps/playground/src/mock/thumbnail.ts`).
 - `vitest.setup.ts` must call `cleanup()` from `@testing-library/react` in an `afterEach`
   (globals are off in `vitest.config.ts`, so it isn't automatic). Without it, DOM nodes
   from earlier tests in the same file leak into later ones and `getByText`/`getByRole`

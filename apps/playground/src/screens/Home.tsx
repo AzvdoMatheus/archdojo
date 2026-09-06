@@ -11,6 +11,9 @@ import {
 } from "@packages/ui";
 import { Link } from "react-router-dom";
 import { challenges } from "../challenges/registry";
+import { mockChallenges } from "../mock/challenges";
+import { usePlayer } from "../mock/player";
+import { getChallengeThumbnail } from "../mock/thumbnail";
 
 function ComingSoon({ description }: { description: string }) {
   return (
@@ -28,6 +31,37 @@ const DIFFICULTY_VARIANT: Record<string, "default" | "secondary" | "outline"> = 
   Médio: "secondary",
   Difícil: "default",
 };
+
+const displayChallenges = [
+  ...challenges.map((challenge) => ({ ...challenge, status: "real" as const })),
+  ...mockChallenges,
+];
+
+function PlayerHeader() {
+  const player = usePlayer();
+  const completedCount = player.completedChallengeSlugs.length;
+
+  return (
+    <div className="mb-8 flex flex-col items-center gap-3">
+      <Card className="border-line-2 shadow-[0_0_16px_rgba(124,58,237,0.25)] flex-row items-center gap-4 border-2 px-5 py-4">
+        <img
+          src={player.avatarUrl}
+          alt={player.name}
+          className="border-neon-cyan h-16 w-16 rounded border-2 shadow-[0_0_10px_rgba(0,229,255,0.4)]"
+        />
+        <div className="flex flex-col gap-1.5 text-left">
+          <span className="font-arcade text-fg text-sm">{player.name}</span>
+          <Badge className="border-neon-gold text-neon-gold w-fit border bg-transparent">
+            Nível {player.level} - {player.xp} XP
+          </Badge>
+          <span className="text-muted-foreground text-lg">
+            {completedCount}/{displayChallenges.length} desafios concluídos
+          </span>
+        </div>
+      </Card>
+    </div>
+  );
+}
 
 export function Home() {
   return (
@@ -60,30 +94,66 @@ export function Home() {
         </TabsList>
 
         <TabsContent value="desafios">
+          <PlayerHeader />
           <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
-            {challenges.map((challenge) => (
-              <Link
-                key={challenge.slug}
-                to={`/challenges/${challenge.slug}`}
-                className="no-underline"
-              >
-                <Card className="border-line-2 hover:border-neon-cyan h-full cursor-pointer border-2 transition-colors">
-                  <CardHeader>
+            {displayChallenges.map((challenge) => {
+              const cardBody = (
+                <Card
+                  className={`border-line-2 h-full overflow-hidden border-2 py-0 transition-colors ${
+                    challenge.status === "mock"
+                      ? "opacity-60"
+                      : "hover:border-neon-cyan cursor-pointer"
+                  }`}
+                >
+                  <img
+                    src={getChallengeThumbnail(challenge.slug)}
+                    alt=""
+                    className="h-28 w-full object-cover"
+                  />
+                  <CardHeader className="pt-4">
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="font-arcade text-neon-gold text-xs">
                         {challenge.title}
                       </CardTitle>
-                      <Badge variant={DIFFICULTY_VARIANT[challenge.difficulty] ?? "outline"}>
-                        {challenge.difficulty}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant={DIFFICULTY_VARIANT[challenge.difficulty] ?? "outline"}>
+                          {challenge.difficulty}
+                        </Badge>
+                        {challenge.status === "mock" && (
+                          <Badge
+                            variant="outline"
+                            className="border-neon-gold text-neon-gold text-[8px]"
+                          >
+                            Em breve
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="text-muted-foreground text-lg">
                     {challenge.summary}
                   </CardContent>
                 </Card>
-              </Link>
-            ))}
+              );
+
+              if (challenge.status === "mock") {
+                return (
+                  <div key={challenge.slug} className="cursor-not-allowed">
+                    {cardBody}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={challenge.slug}
+                  to={`/challenges/${challenge.slug}`}
+                  className="no-underline"
+                >
+                  {cardBody}
+                </Link>
+              );
+            })}
           </div>
         </TabsContent>
 
