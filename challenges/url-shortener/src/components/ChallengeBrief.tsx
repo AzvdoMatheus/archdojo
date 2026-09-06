@@ -2,9 +2,10 @@ import { urlShortenerChallenge } from "../challenge";
 
 export function ChallengeBrief() {
   return (
-    <details className="border-line-2 bg-panel flex-none rounded-lg border-2" open>
-      <summary className="font-arcade text-neon-gold cursor-pointer px-4 py-3 text-xs [text-shadow:0_0_6px_rgba(255,210,63,0.6)]">
-        Desafio: {urlShortenerChallenge.title}
+    <details className="border-line-2 bg-panel flex-none rounded-lg border-2">
+      <summary className="font-arcade text-neon-gold hover:text-fg cursor-pointer px-3 py-1.5 text-[10px] [text-shadow:0_0_6px_rgba(255,210,63,0.6)]">
+        Desafio: {urlShortenerChallenge.title}{" "}
+        <span className="text-muted-foreground normal-case">(ver requisitos completos)</span>
       </summary>
       <div className="max-h-[30vh] overflow-y-auto px-4 pb-4">
         <p>{urlShortenerChallenge.context}</p>

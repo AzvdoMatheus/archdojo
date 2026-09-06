@@ -20,17 +20,17 @@ export function Palette() {
   return (
     <aside
       aria-label="Paleta de componentes"
-      className="border-line-2 bg-panel overflow-y-auto rounded-lg border-2 p-3"
+      className="border-line-2 bg-panel flex w-44 flex-none flex-col overflow-y-auto rounded-lg border-2 p-2"
     >
-      <h2 className="font-arcade text-neon-gold mb-3 text-xs [text-shadow:0_0_6px_rgba(255,210,63,0.6)]">
+      <h2 className="font-arcade text-neon-gold mb-2 text-[9px] [text-shadow:0_0_6px_rgba(255,210,63,0.6)]">
         Componentes
       </h2>
       {byCategory.map(({ category, items }) => (
-        <section key={category} className="mb-3">
-          <h3 className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
+        <details key={category} open className="mb-1.5">
+          <summary className="text-muted-foreground hover:text-fg mb-1.5 cursor-pointer text-[10px] tracking-wider uppercase">
             {category}
-          </h3>
-          <ul className="flex flex-col gap-1.5">
+          </summary>
+          <ul className="flex flex-col gap-1">
             {items.map((def) => (
               <li key={def.kind}>
                 <Popover>
@@ -44,12 +44,12 @@ export function Palette() {
                         event.dataTransfer.setData(PALETTE_DRAG_MIME, def.kind);
                         event.dataTransfer.effectAllowed = "move";
                       }}
-                      className="border-line-2 hover:border-neon-cyan flex-row items-center gap-2 rounded border-2 bg-transparent px-2 py-1.5 text-left text-lg text-fg ring-0 cursor-grab"
+                      className="border-line-2 hover:border-neon-cyan flex-row items-center gap-1.5 rounded border-2 bg-transparent px-1.5 py-1 text-left text-base text-fg ring-0 cursor-grab"
                     >
                       <span className="text-neon-purple">
-                        <PixelIcon name={def.icon} size="md" />
+                        <PixelIcon name={def.icon} size="sm" />
                       </span>
-                      <span>{def.label}</span>
+                      <span className="truncate">{def.label}</span>
                     </Card>
                   </PopoverTrigger>
                   <PopoverContent
@@ -71,7 +71,7 @@ export function Palette() {
               </li>
             ))}
           </ul>
-        </section>
+        </details>
       ))}
     </aside>
   );
